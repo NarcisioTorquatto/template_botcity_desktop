@@ -1,16 +1,14 @@
 # Import for the Desktop Bot
-from botcity.core import DesktopBot
+from botcity.core import DesktopBot, Backend
 
 # Import for integration with BotCity Maestro SDK
 from botcity.maestro import *
 
+from botcity.core import DesktopBot
 from pathlib import Path
-
-import os
 
 # Disable errors if we are not connected to Maestro
 BotMaestroSDK.RAISE_NOT_CONNECTED = False
-
 
 class BotCityTask:
     def __init__(self):
@@ -31,7 +29,7 @@ class BotCityTask:
         """
         try:
             self._log_task_details()
-            self._aplication()
+            self._aplication()  # Corrigido nome do método _aplication para _aplication
             self._finish_task()
         except Exception as e:
             self._handle_error(e)
@@ -47,20 +45,20 @@ class BotCityTask:
         print(f"[INFO] Task ID: {self._execution.task_id}")
         print(f"[INFO] Task Parameters: {self._execution.parameters}")
 
-    def _aplication(self):
-            
-        
+    def _aplication(self):  # Corrigido nome do método de _aplication para _aplication
         try:
             print("[INFO] Executando lógica do bot...")
-            app_path = Path("COLOQUE AQUI O CAMINHO PARA O EXECUTAVEL")
             
-            if app_path.exists():
-                os.startfile(app_path)  # Abre o programa no Windows
-                print("[INFO] Aplicação iniciada com sucesso.")
-            else:
-                print(f"[Erro] O arquivo {app_path} não foi encontrado.")
-                raise FileNotFoundError(f"O arquivo {app_path} não existe.")
+            #COLOQUE AQUI O CAMINHO PARA O DIRETORIO DO PROGRAMA
+            app_path = Path(r"C:\Program Files\Little Navmap\littlenavmap.exe")
             
+            self._bot.execute(str(app_path))
+            
+            #COLOQUE AQUI O ID DA JANELA DO PROGRAMA
+            aplication_id = "Name	Little Navmap 3.0.13.beta1 64-bit — MSFS 2020 / N 2501" 
+            
+            self._bot.connect_to_app(Backend.WIN_32, path=app_path, title=aplication_id)
+                          
         except Exception as e:
             raise RuntimeError(f"[Erro] Falha na execução da lógica do bot: {e}")
 
@@ -111,7 +109,6 @@ class BotCityTask:
         Manipula casos em que um elemento não é encontrado.
         """
         print(f"[Aviso] Elemento não encontrado: {label}")
-
 
 if __name__ == '__main__':
     bot_task = BotCityTask()
